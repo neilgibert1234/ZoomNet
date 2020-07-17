@@ -45,6 +45,23 @@ namespace ZoomNet.Resources
 		Task<Webinar> CreateScheduledWebinarAsync(string userId, string topic, string agenda, DateTime start, int duration, string password = null, WebinarSettings settings = null, IDictionary<string, string> trackingFields = null, CancellationToken cancellationToken = default);
 
 		/// <summary>
+		/// Updates a scheduled webinar for a user
+		/// </summary>
+		/// <param name="webinarId">Webinar Id.</param>
+		/// <param name="topic">Webinar topic.</param>
+		/// <param name="agenda">Webinar description.</param>
+		/// <param name="start">Webinar start time.</param>
+		/// <param name="duration">Webinar duration (minutes).</param>
+		/// <param name="password">Password to join the webinar. Password may only contain the following characters: [a-z A-Z 0-9 @ - _ *]. Max of 10 characters.</param>
+		/// <param name="settings">Webinar settings.</param>
+		/// <param name="trackingFields">Tracking fields.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// The async task.
+		/// </returns>
+		Task UpdateScheduledWebinarAsync(string webinarId, string topic, string agenda, DateTime start, int duration, string password = null, WebinarSettings settings = null, IDictionary<string, string> trackingFields = null, CancellationToken cancellationToken = default)
+
+		/// <summary>
 		/// Creates a recurring webinar for a user.
 		/// </summary>
 		/// <param name="userId">The user Id or email address.</param>
