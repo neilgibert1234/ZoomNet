@@ -15,7 +15,7 @@ namespace ZoomNet.Models
 		/// <value>
 		/// The id.
 		/// </value>
-		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonProperty("registrant_id", NullValueHandling = NullValueHandling.Ignore)]
 		public string Id { get; set; }
 
 		/// <summary>
