@@ -7,7 +7,7 @@ namespace ZoomNet.Models
 	/// <summary>
 	/// A webinar.
 	/// </summary>
-	public abstract class Webinar
+	public class Webinar
 	{
 		/// <summary>
 		/// Gets or sets the unique id.
