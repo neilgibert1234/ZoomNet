@@ -258,10 +258,9 @@ namespace ZoomNet.Resources
 		/// <returns>
 		/// The unique identifier of the new panelist.
 		/// </returns>
-		public async Task<Panelist> AddPanelistAsync(long webinarId, string email, string fullName, CancellationToken cancellationToken = default)
+		public async Task AddPanelistAsync(long webinarId, string email, string fullName, CancellationToken cancellationToken = default)
 		{
-			var panelists = await AddPanelistsAsync(webinarId, new (string Email, string FullName)[] { (email, fullName) }, cancellationToken).ConfigureAwait(false);
-			return panelists.FirstOrDefault();
+			await AddPanelistsAsync(webinarId, new (string Email, string FullName)[] { (email, fullName) }, cancellationToken).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -273,7 +272,7 @@ namespace ZoomNet.Resources
 		/// <returns>
 		/// The async task.
 		/// </returns>
-		public Task<Panelist[]> AddPanelistsAsync(long webinarId, IEnumerable<(string Email, string FullName)> panelists, CancellationToken cancellationToken = default)
+		public Task AddPanelistsAsync(long webinarId, IEnumerable<(string Email, string FullName)> panelists, CancellationToken cancellationToken = default)
 		{
 			var data = new JObject();
 			data.AddPropertyIfValue("panelists", panelists.Select(p => new { email = p.Email, name = p.FullName }).ToArray());
@@ -282,7 +281,7 @@ namespace ZoomNet.Resources
 				.PostAsync($"webinars/{webinarId}/panelists")
 				.WithJsonBody(data)
 				.WithCancellationToken(cancellationToken)
-				.AsObject<Panelist[]>();
+				.AsMessage();
 		}
 
 		/// <summary>
@@ -638,6 +637,31 @@ namespace ZoomNet.Resources
 				.AsObject<TrackingSource[]>("tracking_sources");
 		}
 
+		/// <summary>
+		/// Retrieve the duration of the participants for the webinar
+		/// </summary>
+		/// <param name="webinarId">The webinar id.</param>
+		/// <param name="recordsPerPage">The number of records returned within a single API call.</param>
+		/// <param name="page">The current page number of returned records.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>
+		/// An array of <see cref="Participants" />.
+		/// </returns>
+		public Task<PaginatedResponse<Participants>> GetWebinarParticipantsReport(long webinarId, int recordsPerPage = 30, int page = 1, CancellationToken cancellationToken = default)
+		{
+			if (recordsPerPage < 1 || recordsPerPage > 300)
+			{
+				throw new ArgumentOutOfRangeException(nameof(recordsPerPage), "Records per page must be between 1 and 300");
+			}
+
+			return _client
+				.GetAsync($"report/webinars/{webinarId}/participants")
+				.WithArgument("page_size", recordsPerPage)
+				.WithArgument("page", page)
+				.WithCancellationToken(cancellationToken)
+				.AsPaginatedResponse<Participants>("participants");
+		}
+
 		private Task UpdateRegistrantsStatusAsync(long webinarId, IEnumerable<(string RegistrantId, string RegistrantEmail)> registrantsInfo, string status, string occurrenceId = null, CancellationToken cancellationToken = default)
 		{
 			var data = new JObject();
@@ -651,5 +675,7 @@ namespace ZoomNet.Resources
 				.WithCancellationToken(cancellationToken)
 				.AsMessage();
 		}
+
+
 	}
 }
