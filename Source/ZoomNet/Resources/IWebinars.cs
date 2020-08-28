@@ -374,11 +374,11 @@ namespace ZoomNet.Resources
 		/// </summary>
 		/// <param name="webinarId">The webinar id.</param>
 		/// <param name="recordsPerPage">The number of records returned within a single API call.</param>
-		/// <param name="page">The current page number of returned records.</param>
+		/// <param name="nextPageToken">The next page token.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="Participants" />.
 		/// </returns>
-		Task<PaginatedResponse<Participants>> GetWebinarParticipantsReport(long webinarId, int recordsPerPage = 30, int page = 1, CancellationToken cancellationToken = default);
+		Task<PaginatedResponseWithToken<Participants>> GetWebinarParticipantsReport(long webinarId, int recordsPerPage = 30, string nextPageToken = "", CancellationToken cancellationToken = default);
 	}
 }

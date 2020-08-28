@@ -642,12 +642,12 @@ namespace ZoomNet.Resources
 		/// </summary>
 		/// <param name="webinarId">The webinar id.</param>
 		/// <param name="recordsPerPage">The number of records returned within a single API call.</param>
-		/// <param name="page">The current page number of returned records.</param>
+		/// <param name="nextPageToken">The next page token.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>
 		/// An array of <see cref="Participants" />.
 		/// </returns>
-		public Task<PaginatedResponse<Participants>> GetWebinarParticipantsReport(long webinarId, int recordsPerPage = 30, int page = 1, CancellationToken cancellationToken = default)
+		public Task<PaginatedResponseWithToken<Participants>> GetWebinarParticipantsReport(long webinarId, int recordsPerPage = 30, string nextPageToken = "", CancellationToken cancellationToken = default)
 		{
 			if (recordsPerPage < 1 || recordsPerPage > 300)
 			{
@@ -657,9 +657,9 @@ namespace ZoomNet.Resources
 			return _client
 				.GetAsync($"report/webinars/{webinarId}/participants")
 				.WithArgument("page_size", recordsPerPage)
-				.WithArgument("page", page)
+				.WithArgument("next_page_token", nextPageToken)
 				.WithCancellationToken(cancellationToken)
-				.AsPaginatedResponse<Participants>("participants");
+				.AsPaginatedResponseWithToken<Participants>("participants");
 		}
 
 		private Task UpdateRegistrantsStatusAsync(long webinarId, IEnumerable<(string RegistrantId, string RegistrantEmail)> registrantsInfo, string status, string occurrenceId = null, CancellationToken cancellationToken = default)

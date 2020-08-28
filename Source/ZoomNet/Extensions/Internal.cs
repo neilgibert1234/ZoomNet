@@ -587,11 +587,13 @@ namespace ZoomNet
 			var result = new PaginatedResponse<T>()
 			{
 				PageCount = jObject.Property("page_count").Value.ToObject<int>(),
-				PageNumber = jObject.Property("page_number").Value.ToObject<int>(),
 				PageSize = jObject.Property("page_size").Value.ToObject<int>(),
 				Records = jObject.Property(propertyName).Value.ToObject<T[]>(serializer),
 				TotalRecords = jObject.Property("total_records").Value.ToObject<int>()
 			};
+
+			if (jObject.Property("page_number") != null)
+				result.PageNumber = jObject.Property("page_number").Value.ToObject<int>();
 
 			return result;
 		}
